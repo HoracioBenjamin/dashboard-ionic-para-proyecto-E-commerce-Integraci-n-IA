@@ -1,0 +1,111 @@
+/* General */
+:root {
+  --ion-background-color: #f2f2f7; /* Color gris claro de fondo estilo iOS */
+}
+
+/* Header */
+.dashboard-header IonToolbar {
+  --background: #f2f2f7;
+  --color: #000;
+  border-bottom: 0.5px solid #d1d1d6; /* Línea separadora sutil */
+}
+
+.dashboard-header IonTitle {
+  font-family: 'serif';
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+}
+
+/* Contenedor del Logo */
+.dashboard-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 0;
+  margin-bottom: 10px;
+}
+
+.dashboard-logo {
+  max-width: 150px; /* Ajusta el tamaño de tu logo */
+  height: auto;
+  opacity: 0.9;
+}
+
+/* Grilla */
+.dashboard-grid {
+  padding: 0;
+}
+
+/* EL BOTÓN ESTILO APPLE */
+.apple-button {
+  width: 100%;
+  aspect-ratio: 1 / 1; /* Hace que los botones sean cuadrados perfectos */
+  background: #ffffff;
+  border: none;
+  border-radius: 28px; /* Puntas muy redondeadas */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Sombra suave */
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Efecto al presionar (Active) */
+.apple-button:active {
+  transform: scale(0.96); /* Se "hunde" un poco */
+  background: #f9f9f9;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+/* Iconos */
+.apple-icon {
+  font-size: 2.5rem; /* Icono grande */
+  color: #000; /* Negro sutil */
+  margin-bottom: 12px;
+}
+
+/* Texto */
+.apple-text {
+  font-family: 'serif';
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #000;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Variación Danger (Cerrar Sesión) */
+.btn-danger .apple-icon,
+.btn-danger .apple-text {
+  color: #ff3b30; /* Rojo Apple */
+}
+
+/* Estado Inactivo */
+.btn-inactive {
+  opacity: 0.6;
+  background: #e5e5ea;
+  cursor: not-allowed;
+}
+
+.btn-inactive .apple-icon,
+.btn-inactive .apple-text {
+  color: #8e8e93;
+}
+
+.coming-soon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.1);
+  color: #8e8e93;
+  font-size: 0.6rem;
+  padding: 3px 6px;
+  border-radius: 8px;
+  text-transform: uppercase;
+}

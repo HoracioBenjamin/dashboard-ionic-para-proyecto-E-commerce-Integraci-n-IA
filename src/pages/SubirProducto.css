@@ -1,0 +1,98 @@
+
+ion-input[fill="outline"] {
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+.form-wrapper {
+  max-width: 600px;
+  margin: 0 auto;
+  padding-top: 15px; /* Aire al inicio */
+}
+
+.custom-item {
+  margin-top: 30px;
+  margin-bottom: 18px;
+  --border-radius: 12px;
+  --highlight-color-focused: #000;
+}
+.form-row {
+  display: flex;
+  gap: 12px; /* Espacio horizontal entre Marca/Tallas y Precio/Stock */
+}
+.price-row {
+  display: flex;
+  gap: 10px;
+}
+
+.price-input {
+  flex: 1;
+}
+.flex-1 {
+  flex: 1;
+}
+.toggle-item {
+  margin: 10px 0 20px 0;
+  --background: #f9f9f9;
+  border-radius: 12px;
+  padding: 5px 10px;
+}
+
+.main-save-button {
+  --background: #000;
+  --border-radius: 16px;
+  height: 60px;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-top: 20px;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+/* Animación para el campo de oferta */
+.animate__fadeInDown {
+  animation: fadeInDown 0.3s;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tallas-container {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #eee;
+}
+
+.section-title {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.talla-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.talla-check {
+  --background: transparent;
+  flex: 1;
+}
+
+.stock-input-mini {
+  width: 100px;
+  --background: transparent;
+}
+
+.stock-input-mini ion-input {
+  --padding-top: 5px;
+  --padding-bottom: 5px;
+  text-align: center;
+  font-weight: bold;
+}

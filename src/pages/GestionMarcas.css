@@ -1,0 +1,55 @@
+/* ... Tus estilos anteriores ... */
+
+.custom-list {
+  background: transparent;
+  padding: 0;
+}
+
+.brand-item {
+  --background: white; /* Cambiado a blanco para que resalte la imagen */
+  margin-bottom: 8px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+  --padding-start: 10px;
+  --inner-padding-end: 10px;
+  border: 1px solid #f0f0f0;
+}
+
+/* NUEVO: Estilo para el contenedor de la imagen pequeña en la lista */
+.brand-list-img-container {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9f9f9;
+  border: 1px solid #eee;
+}
+
+.brand-list-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Mantiene la proporción del logo sin cortarlo */
+  padding: 2px; /* Pequeño aire dentro del cuadro */
+}
+
+.brand-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #000;
+}
+
+/* Ajuste para que los botones de acción no se vean gigantes */
+.brand-item IonButtons IonButton {
+    --padding-start: 8px;
+    --padding-end: 8px;
+}

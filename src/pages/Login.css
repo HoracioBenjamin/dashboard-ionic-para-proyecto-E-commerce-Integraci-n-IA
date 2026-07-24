@@ -1,0 +1,66 @@
+/* Contenedor principal: Quitamos el flex de aquí y lo pasamos a un div interno */
+.login-background {
+    --background: none;
+    background: url('/images/fondo-login.jpg') no-repeat center center / cover;
+}
+
+/* Este div envolverá todo y forzará el centrado total */
+.flex-center-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;      /* Centra horizontalmente */
+    justify-content: center;   /* Centra verticalmente */
+    min-height: 100%;         /* Ocupa todo el alto del IonContent */
+    width: 100%;
+    padding: 20px;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;         /* Límite de ancho para que se vea bien en web */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.app-title {
+    font-family: 'serif';
+    font-size: clamp(2.5rem, 8vw, 3.5rem); /* Tamaño responsivo */
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin-bottom: 30px;
+    text-align: center;
+    text-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.glass-box {
+    width: 100%;
+    padding: 40px 25px;
+    border-radius: 40px;
+    background: rgba(255, 255, 255, 0.7); /* Un poco más sólido para legibilidad */
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Usamos margin en lugar de padding para separar los bloques */
+.glass-input {
+    --background: rgba(255, 255, 255, 0.5);
+    --color: #000;
+    --placeholder-color: #666;
+    --border-radius: 15px;
+    
+    /* Esta es la propiedad correcta para separar los inputs entre sí */
+    margin-bottom: 25px; 
+    
+    font-family: 'serif';
+    display: block; /* Asegura que el margen se aplique como bloque */
+}
+
+/* Si quieres que el último input (Contraseña) tenga más espacio con el botón */
+.glass-input:last-of-type {
+    margin-bottom: 30px;
+}
