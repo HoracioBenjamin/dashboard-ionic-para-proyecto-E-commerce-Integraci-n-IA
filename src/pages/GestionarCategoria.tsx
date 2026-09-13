@@ -7,6 +7,8 @@ import {
 } from '@ionic/react';
 import { gridOutline, addOutline, trashOutline, pencilOutline, saveOutline, closeOutline, linkOutline, eyeOutline } from 'ionicons/icons';
 import { supabase } from '../supabaseClient';
+import ImagenCampo from '../components/ImagenCampo';
+import { PLACEHOLDER_IMG } from '../components/placeholder';
 import './GestionarCategoria.css';
 
 const GestionarCategoria: React.FC = () => {
@@ -20,7 +22,7 @@ const GestionarCategoria: React.FC = () => {
   const [presentLoading, dismissLoading] = useIonLoading();
   const [presentAlert] = useIonAlert();
 
-  const placeholderImg = 'https://via.placeholder.com/100?text=Cat';
+  const placeholderImg = PLACEHOLDER_IMG;
 
   useEffect(() => {
     cargarCategorias();
@@ -170,30 +172,15 @@ const GestionarCategoria: React.FC = () => {
                 <small style={{ color: '#666' }}>URL amigable: <strong>{generarSlug(nombre) || '...'}</strong></small>
               </div>
 
-              <IonItem lines="none" className="input-item">
-                <IonInput 
-                  label="URL Imagen" labelPlacement="floating" fill="outline" mode="md"
-                  value={imagenUrl} onIonInput={e => setImagenUrl(e.detail.value!)}
-                  placeholder="https://link-a-tu-imagen.jpg"
-                >
-                  <IonIcon icon={linkOutline} slot="end" />
-                </IonInput>
-              </IonItem>
-
-              {/* --- VISTA PREVIA DE LA URL --- */}
-              {imagenUrl && (
-                <div className="url-preview ion-text-center ion-padding-vertical" style={{ background: '#f9f9f9', borderRadius: '10px', marginTop: '10px' }}>
-                   <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '8px' }}>
-                     <IonIcon icon={eyeOutline} /> Vista previa de imagen
-                   </p>
-                   <img 
-                    src={imagenUrl} 
-                    alt="Preview" 
-                    style={{ maxHeight: '120px', borderRadius: '8px', border: '1px solid #ddd' }}
-                    onError={(e: any) => { e.target.src = placeholderImg; }}
-                   />
-                </div>
-              )}
+              <ImagenCampo
+                label="URL Imagen"
+                value={imagenUrl}
+                onChange={setImagenUrl}
+                carpeta="Categoria_Imagenes"
+                slugBase={generarSlug(nombre)}
+                previewFit="cover"
+                tituloPreview="Vista previa de imagen"
+              />
 
               <IonButton expand="block" className="main-btn ion-margin-top" onClick={confirmarGuardar} mode="ios">
                 <IonIcon icon={editandoId ? saveOutline : addOutline} slot="start" />
@@ -223,7 +210,7 @@ const GestionarCategoria: React.FC = () => {
                         src={cat.imagen_url || placeholderImg} 
                         alt={cat.nombre} 
                         style={{ borderRadius: '8px' }}
-                        onError={(e: any) => { e.target.src = placeholderImg; }}
+                        onError={(e: any) => { if (!e.target.src.startsWith('data:')) e.target.src = placeholderImg; }}
                       />
                     </IonThumbnail>
 

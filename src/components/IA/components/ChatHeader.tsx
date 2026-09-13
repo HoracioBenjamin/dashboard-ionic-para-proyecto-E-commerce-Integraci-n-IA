@@ -17,7 +17,7 @@ const ChatHeader: React.FC<Props> = ({ onClose }) => {
 
                 <h2>
 
-                    ✨ Horacio AI
+                    ✨ ShoesDuoc AI
 
                 </h2>
 

@@ -4,7 +4,6 @@ import {
   IonContent, 
   IonInput, 
   IonButton, 
-  IonText, 
   useIonToast, 
   useIonLoading 
 } from '@ionic/react';
@@ -65,6 +64,55 @@ const Login: React.FC = () => {
     }
   };
 
+  const handleSignUp = async () => {
+    if (!email || !password) {
+      presentToast({
+        message: 'Por favor, ingresa un email y contraseña para registrarte',
+        duration: 2000,
+        color: 'warning',
+        position: 'bottom'
+      });
+      return;
+    }
+
+    await presentLoading({
+      message: 'Creando cuenta...',
+      spinner: 'circles'
+    });
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password
+      });
+
+      await dismissLoading();
+
+      if (error) {
+        presentToast({
+          message: 'Error al registrar: ' + error.message,
+          duration: 3000,
+          color: 'danger',
+          position: 'bottom'
+        });
+      } else if (data.user) {
+        presentToast({
+          message: '¡Cuenta creada! (Revisa tu email si requiere confirmación)',
+          duration: 4000,
+          color: 'success',
+          position: 'bottom'
+        });
+        // Dependiendo de tu config en Supabase, el usuario podría iniciar sesión automático
+        if (data.session) {
+          history.push('/home');
+        }
+      }
+    } catch (err) {
+      await dismissLoading();
+      console.error(err);
+    }
+  };
+
   return (
     <IonPage>
       <IonContent className="login-background" scrollEvents={true}>
@@ -73,15 +121,14 @@ const Login: React.FC = () => {
           <div className="login-container">
             
             {/* Nombre de la APP centrado */}
-            <h1 className="app-title">Harán</h1>
+            <h1 className="app-title">ShoesDuoc</h1>
 
             {/* Placa Liquid Glass */}
             <div className="glass-box">
               <h2 style={{ 
                 textAlign: 'center', 
                 marginBottom: '35px', 
-                fontFamily: 'serif',
-                color: '#000',
+                color: '#002855',
                 letterSpacing: '0.1em'
               }}>
                 INICIAR SESIÓN
@@ -116,6 +163,16 @@ const Login: React.FC = () => {
                 onClick={handleLogin}
               >
                 Ingresar
+              </IonButton>
+
+              <IonButton 
+                fill="clear" 
+                expand="block" 
+                mode="ios"
+                onClick={handleSignUp}
+                style={{ marginTop: '10px', color: '#333' }}
+              >
+                Crear Cuenta (Registro)
               </IonButton>
             </div>
 

@@ -8,6 +8,7 @@ import {
 import { useLocation, useHistory } from 'react-router-dom';
 import { cloudUploadOutline, imageOutline, saveOutline, addOutline, trashOutline } from 'ionicons/icons';
 import { supabase } from '../supabaseClient';
+import ImagenCampo from '../components/ImagenCampo';
 import { HexColorPicker } from "react-colorful";
 import './SubirProducto.css';
 import { useIonViewDidEnter } from '@ionic/react';
@@ -38,6 +39,15 @@ const SubirProducto: React.FC = () => {
 
   const [presentToast] = useIonToast();
   const [presentLoading, dismissLoading] = useIonLoading();
+
+  const generarSlug = (texto: string) => {
+    return texto
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/[\s_-]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  };
 
   // 1. Cargar marcas, categorías y colores al montar
   useEffect(() => {
@@ -184,17 +194,15 @@ const SubirProducto: React.FC = () => {
 
       <IonContent className="ion-padding gray-bg">
         <div className="form-wrapper">
-          <div className="preview-container ion-text-center" style={{ marginBottom: '20px' }}>
-            <img
-              src={imagenUrl || 'https://via.placeholder.com/150'}
-              alt="Preview"
-              style={{ width: '120px', height: '120px', borderRadius: '15px', objectFit: 'cover', border: '2px solid #ddd' }}
-            />
-          </div>
-
-          <IonItem lines="none" className="custom-item">
-            <IonInput label="URL Imagen" labelPlacement="floating" fill="outline" value={imagenUrl} onIonInput={e => setImagenUrl(e.detail.value!)} />
-          </IonItem>
+          <ImagenCampo
+            label="URL Imagen"
+            value={imagenUrl}
+            onChange={setImagenUrl}
+            carpeta="Producto_Imagenes"
+            slugBase={generarSlug(nombre)}
+            previewFit="cover"
+            tituloPreview="Vista previa del producto"
+          />
 
           <IonItem lines="none" className="custom-item">
             <IonInput label="Nombre Producto" labelPlacement="floating" fill="outline" value={nombre} onIonInput={e => setNombre(e.detail.value!)} />

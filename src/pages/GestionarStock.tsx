@@ -12,6 +12,7 @@ import {
   addOutline
 } from 'ionicons/icons';
 import { supabase } from '../supabaseClient';
+import { PLACEHOLDER_IMG } from '../components/placeholder';
 import './GestionarStock.css';
 
 const GestionarStock: React.FC = () => {
@@ -173,7 +174,7 @@ const GestionarStock: React.FC = () => {
                     <IonRow className="ion-align-items-center">
                       <IonCol size="4">
                         <div className="img-container">
-                          <img src={prod.imagen_url || 'https://placehold.jp/150x150.png'} alt={prod.nombre} />
+                          <img src={prod.imagen_url || PLACEHOLDER_IMG} alt={prod.nombre} onError={(e: any) => { if (!e.target.src.startsWith('data:')) e.target.src = PLACEHOLDER_IMG; }} />
                         </div>
                         <div className="actions-row">
                           <IonButton fill="clear" color="dark" size="small" onClick={() => abrirEdicion(prod)}>
@@ -241,12 +242,12 @@ const GestionarStock: React.FC = () => {
           <IonContent className="ion-padding">
             {productoAEditar && (
               <div className="edit-form">
-                <IonItem fill="outline" mode="md" className="ion-margin-bottom">
+                <IonItem mode="md" className="ion-margin-bottom">
                   <IonLabel position="floating">Nombre</IonLabel>
                   <IonInput value={productoAEditar.nombre} onIonInput={e => setProductoAEditar({...productoAEditar, nombre: e.detail.value!})} />
                 </IonItem>
 
-                <IonItem fill="outline" mode="md" className="ion-margin-bottom">
+                <IonItem mode="md" className="ion-margin-bottom">
                   <IonLabel position="floating">Precio Base ($)</IonLabel>
                   <IonInput type="number" value={productoAEditar.precio} onIonInput={e => setProductoAEditar({...productoAEditar, precio: parseInt(e.detail.value!)})} />
                 </IonItem>
@@ -257,7 +258,7 @@ const GestionarStock: React.FC = () => {
                 </IonItem>
 
                 {productoAEditar.en_oferta && (
-                  <IonItem fill="outline" mode="md" className="ion-margin-top ion-margin-bottom">
+                  <IonItem mode="md" className="ion-margin-top ion-margin-bottom">
                     <IonLabel position="floating">Precio Oferta ($)</IonLabel>
                     <IonInput type="number" value={productoAEditar.precio_oferta} onIonInput={e => setProductoAEditar({...productoAEditar, precio_oferta: parseInt(e.detail.value!)})} />
                   </IonItem>

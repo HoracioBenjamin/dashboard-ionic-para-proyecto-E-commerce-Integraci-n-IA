@@ -9,11 +9,14 @@ import {
   closeOutline, saveOutline, linkOutline, eyeOutline 
 } from 'ionicons/icons';
 import { supabase } from '../supabaseClient';
+import ImagenCampo from '../components/ImagenCampo';
+import { PLACEHOLDER_IMG } from '../components/placeholder';
 import './GestionMarcas.css';
 
 const GestionMarcas: React.FC = () => {
   const [nombre, setNombre] = useState('');
   const [logoUrl, setLogoUrl] = useState('');
+  const [portadaUrl, setPortadaUrl] = useState('');
   const [marcas, setMarcas] = useState<any[]>([]);
   const [cargando, setCargando] = useState(true);
   const [editandoId, setEditandoId] = useState<number | null>(null);
@@ -21,7 +24,7 @@ const GestionMarcas: React.FC = () => {
   const [presentToast] = useIonToast();
   const [presentAlert] = useIonAlert();
 
-  const placeholderImg = 'https://via.placeholder.com/100?text=No+Log';
+  const placeholderImg = PLACEHOLDER_IMG;
 
   useEffect(() => {
     cargarMarcas();
@@ -64,6 +67,7 @@ const GestionMarcas: React.FC = () => {
 
   const ejecutarGuardado = async () => {
     const finalLogoUrl = logoUrl.trim() === '' ? null : logoUrl.trim();
+    const finalPortadaUrl = portadaUrl.trim() === '' ? null : portadaUrl.trim();
     const slugCalculado = generarSlug(nombre);
 
     try {
@@ -73,6 +77,7 @@ const GestionMarcas: React.FC = () => {
           .update({ 
             nombre: nombre.trim(), 
             logo_url: finalLogoUrl,
+            imagen_portada: finalPortadaUrl,
             slug: slugCalculado 
           })
           .eq('id', editandoId);
@@ -86,6 +91,7 @@ const GestionMarcas: React.FC = () => {
           .insert([{ 
             nombre: nombre.trim(), 
             logo_url: finalLogoUrl,
+            imagen_portada: finalPortadaUrl,
             slug: slugCalculado 
           }]);
         
@@ -95,6 +101,7 @@ const GestionMarcas: React.FC = () => {
 
       setNombre('');
       setLogoUrl('');
+      setPortadaUrl('');
       cargarMarcas();
     } catch (err: any) {
       presentToast({ message: 'Error: ' + err.message, duration: 3500, color: 'danger' });
@@ -105,6 +112,7 @@ const GestionMarcas: React.FC = () => {
     setEditandoId(marca.id);
     setNombre(marca.nombre);
     setLogoUrl(marca.logo_url || '');
+    setPortadaUrl(marca.imagen_portada || '');
     const content = document.querySelector('ion-content');
     if (content) content.scrollToTop(500);
   };
@@ -152,7 +160,7 @@ const GestionMarcas: React.FC = () => {
                 {editandoId ? 'Editar Marca' : 'Agregar Nueva Marca'}
               </h2>
               {editandoId && (
-                <IonButton fill="clear" color="danger" onClick={() => {setEditandoId(null); setNombre(''); setLogoUrl('');}}>
+                <IonButton fill="clear" color="danger" onClick={() => {setEditandoId(null); setNombre(''); setLogoUrl(''); setPortadaUrl('');}}>
                   <IonIcon icon={closeOutline} slot="icon-only" />
                 </IonButton>
               )}
@@ -173,30 +181,30 @@ const GestionMarcas: React.FC = () => {
                 <small style={{ color: '#666' }}>Slug de filtro: <strong>{generarSlug(nombre) || '...'}</strong></small>
             </div>
 
-            <IonItem lines="none" className="input-item">
-              <IonInput 
-                label="URL Logo (Opcional)" labelPlacement="floating" fill="outline" mode="md"
-                value={logoUrl} onIonInput={e => setLogoUrl(e.detail.value!)}
-                placeholder="https://link-a-imagen.png"
-              >
-                <IonIcon icon={linkOutline} slot="end" />
-              </IonInput>
-            </IonItem>
-
-            {/* VISTA PREVIA DEL LOGO */}
-            {logoUrl && (
-              <div className="url-preview ion-text-center ion-padding-vertical" style={{ background: '#f9f9f9', borderRadius: '10px', marginTop: '15px', border: '1px dashed #ccc' }}>
-                 <p style={{ fontSize: '0.75rem', color: '#666', marginBottom: '8px' }}>
-                   <IonIcon icon={eyeOutline} /> Vista previa del logo
-                 </p>
-                 <img 
-                  src={logoUrl} 
-                  alt="Preview Logo" 
-                  style={{ maxHeight: '80px', maxWidth: '150px', objectFit: 'contain' }}
-                  onError={(e: any) => { e.target.src = placeholderImg; }}
-                 />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '5px' }}>
+              <div>
+                <ImagenCampo
+                  label="URL Logo (Opcional)"
+                  value={logoUrl}
+                  onChange={setLogoUrl}
+                  carpeta="Logo_Marcas"
+                  slugBase={generarSlug(nombre)}
+                  previewFit="contain"
+                  tituloPreview="Vista previa del logo"
+                />
               </div>
-            )}
+              <div>
+                <ImagenCampo
+                  label="URL Portada revista (Opcional)"
+                  value={portadaUrl}
+                  onChange={setPortadaUrl}
+                  carpeta="Portada_Marcas"
+                  slugBase={generarSlug(nombre)}
+                  previewFit="cover"
+                  tituloPreview="Vista previa de la portada"
+                />
+              </div>
+            </div>
 
             <IonButton expand="block" onClick={confirmarGuardar} className="save-btn ion-margin-top" mode="ios">
               <IonIcon icon={editandoId ? saveOutline : addOutline} slot="start" />
@@ -226,7 +234,15 @@ const GestionMarcas: React.FC = () => {
                       src={m.logo_url || placeholderImg} 
                       alt={`Logo ${m.nombre}`} 
                       style={{ borderRadius: '6px', objectFit: 'contain', background: '#fff' }}
-                      onError={(e: any) => { e.target.src = placeholderImg; }}
+                      onError={(e: any) => { if (!e.target.src.startsWith('data:')) e.target.src = placeholderImg; }}
+                    />
+                  </IonThumbnail>
+                  <IonThumbnail slot="start" title={m.imagen_portada ? 'Con portada' : 'Sin portada'}>
+                    <img 
+                      src={m.imagen_portada || placeholderImg} 
+                      alt={`Portada ${m.nombre}`} 
+                      style={{ borderRadius: '6px', objectFit: 'cover', background: '#f4f4f4' }}
+                      onError={(e: any) => { if (!e.target.src.startsWith('data:')) e.target.src = placeholderImg; }}
                     />
                   </IonThumbnail>
 

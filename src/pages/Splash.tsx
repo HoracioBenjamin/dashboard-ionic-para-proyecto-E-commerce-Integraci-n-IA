@@ -39,7 +39,7 @@ const SplashScreen: React.FC = () => {
           textAlign: 'center',
           position: 'relative',
           overflow: 'hidden',
-          backgroundColor: '#000' 
+          backgroundColor: '#002855' 
         }}>
           
           {/* IMAGEN DE FONDO CON ZOOM SUAVE */}
@@ -70,7 +70,7 @@ const SplashScreen: React.FC = () => {
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.45)', 
+            backgroundColor: 'rgba(0, 30, 66, 0.55)', 
             zIndex: 1
           }} />
 
@@ -82,26 +82,25 @@ const SplashScreen: React.FC = () => {
             style={{ zIndex: 2, position: 'relative', padding: '0 30px' }}
           >
             <h1 style={{ 
-              fontFamily: 'serif', 
-              fontWeight: 300, 
+              fontWeight: 800, 
               fontSize: '2.5rem', 
-              fontStyle: 'italic',
+              letterSpacing: '0.02em',
               marginBottom: '12px',
               color: '#fff',
               textShadow: '0px 4px 20px rgba(0,0,0,0.7)'
             }}>
-              HARÁN
+              ShoesDuoc
             </h1>
             
             <p style={{ 
               letterSpacing: '0.4em', 
-              color: 'rgba(255,255,255,0.85)',
-              fontWeight: 500,
+              color: '#FFB800',
+              fontWeight: 700,
               fontSize: '0.65rem',
               textTransform: 'uppercase',
               margin: 0
             }}>
-              L'Ancora di Horacio
+              WearShop
             </p>
           </motion.div>
         </div>

@@ -67,7 +67,7 @@ const Home: React.FC = () => {
       {/* Header elegante y minimalista */}
       <IonHeader className="ion-no-border dashboard-header">
         <IonToolbar>
-          <IonTitle>Dashboard Harán</IonTitle>
+          <IonTitle>WearShop HQ</IonTitle>
         </IonToolbar>
       </IonHeader>
 
@@ -75,8 +75,7 @@ const Home: React.FC = () => {
         
         {/* LOGO de la APP abajo del Header */}
         <div className="dashboard-logo-container">
-          {/* Reemplaza esta URL por el logo real de Harán */}
-          <img src="/assets/logo-haran-negro.png" alt="Logo Harán" className="dashboard-logo" />
+          <img src="/logo-shoesduoc-navy.svg" alt="ShoesDuoc — WearShop" className="dashboard-logo" />
         </div>
 
         {/* Grilla de Botones Estilo Apple */}

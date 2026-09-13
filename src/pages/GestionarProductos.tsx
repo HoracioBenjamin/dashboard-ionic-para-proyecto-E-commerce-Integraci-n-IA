@@ -9,6 +9,7 @@ import {
   trashOutline, pencilOutline, addOutline
 } from 'ionicons/icons';
 import { supabase } from '../supabaseClient';
+import { PLACEHOLDER_IMG } from '../components/placeholder';
 import { useHistory } from 'react-router-dom';
 import './GestionarProductos.css';
 
@@ -109,7 +110,7 @@ const GestionarProductos: React.FC = () => {
                   <IonRow className="ion-align-items-center">
                     <IonCol size="4">
                       <div className="img-container">
-                        <img src={prod.imagen_url || 'https://placehold.jp/150x150.png'} alt={prod.nombre} />
+                        <img src={prod.imagen_url || PLACEHOLDER_IMG} alt={prod.nombre} onError={(e: any) => { if (!e.target.src.startsWith('data:')) e.target.src = PLACEHOLDER_IMG; }} />
                       </div>
                       <div className="actions-row">
                         <IonButton fill="clear" color="dark" size="small" onClick={() => abrirEdicion(prod)}>
