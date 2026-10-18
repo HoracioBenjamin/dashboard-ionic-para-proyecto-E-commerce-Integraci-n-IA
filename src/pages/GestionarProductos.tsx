@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { 
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent, 
-  IonList, IonLabel, IonButton, IonIcon, IonButtons, IonBackButton, 
+  IonList, IonLabel, IonButton, IonIcon, IonButtons, IonBackButton, IonMenuButton,
   IonGrid, IonRow, IonCol, useIonAlert, useIonToast, 
   IonSpinner, IonRefresher, IonRefresherContent, IonFab, IonFabButton
 } from '@ionic/react';
@@ -10,6 +10,7 @@ import {
 } from 'ionicons/icons';
 import { supabase } from '../supabaseClient';
 import { PLACEHOLDER_IMG } from '../components/placeholder';
+import ThemeToggle from '../components/ThemeToggle';
 import { useHistory } from 'react-router-dom';
 import './GestionarProductos.css';
 
@@ -90,8 +91,9 @@ const GestionarProductos: React.FC = () => {
     <IonPage>
       <IonHeader className="ion-no-border">
         <IonToolbar>
-          <IonButtons slot="start"><IonBackButton defaultHref="/home" color="primary" /></IonButtons>
+          <IonButtons slot="start"><IonMenuButton menu="main-menu" /><IonBackButton defaultHref="/home" color="primary" /></IonButtons>
           <IonTitle style={{ fontWeight: 'bold' }}>GESTIONAR PRODUCTOS</IonTitle>
+          <IonButtons slot="end"><ThemeToggle /></IonButtons>
         </IonToolbar>
       </IonHeader>
 

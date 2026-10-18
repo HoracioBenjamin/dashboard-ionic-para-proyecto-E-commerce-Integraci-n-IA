@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent, 
-  IonItem, IonInput, IonButton, IonBackButton, IonButtons, 
+  IonItem, IonInput, IonButton, IonBackButton, IonButtons, IonMenuButton,
   useIonToast, useIonLoading, IonIcon, IonCard, IonCardContent,
   IonList, IonLabel, useIonAlert, IonSkeletonText, IonThumbnail
 } from '@ionic/react';
@@ -9,11 +9,14 @@ import { gridOutline, addOutline, trashOutline, pencilOutline, saveOutline, clos
 import { supabase } from '../supabaseClient';
 import ImagenCampo from '../components/ImagenCampo';
 import { PLACEHOLDER_IMG } from '../components/placeholder';
+import ThemeToggle from '../components/ThemeToggle';
 import './GestionarCategoria.css';
 
 const GestionarCategoria: React.FC = () => {
   const [nombre, setNombre] = useState('');
+  const [slugGuardado, setSlugGuardado] = useState('');
   const [imagenUrl, setImagenUrl] = useState('');
+  const [portadaUrl, setPortadaUrl] = useState('');
   const [categorias, setCategorias] = useState<any[]>([]);
   const [editandoId, setEditandoId] = useState<number | null>(null);
   const [cargando, setCargando] = useState(true);
@@ -49,6 +52,8 @@ const GestionarCategoria: React.FC = () => {
       .replace(/^-+|-+$/g, '');   // Elimina guiones al inicio o final
   };
 
+  const slugImagen = editandoId ? slugGuardado : generarSlug(nombre);
+
   const confirmarGuardar = () => {
     if (!nombre.trim()) {
       presentToast({ message: 'El nombre es obligatorio', duration: 2000, color: 'warning' });
@@ -68,7 +73,8 @@ const GestionarCategoria: React.FC = () => {
   const ejecutarGuardado = async () => {
     await presentLoading('Procesando...');
     const finalImgUrl = imagenUrl.trim() === '' ? null : imagenUrl.trim();
-    const slugCalculado = generarSlug(nombre); // Generamos el slug aquí
+    const finalPortadaUrl = portadaUrl.trim() === '' ? null : portadaUrl.trim();
+    const slugCalculado = slugImagen;
 
     try {
       if (editandoId) {
@@ -77,6 +83,7 @@ const GestionarCategoria: React.FC = () => {
           .update({ 
             nombre: nombre.trim(), 
             imagen_url: finalImgUrl,
+            imagen_portada: finalPortadaUrl,
             slug: slugCalculado 
           })
           .eq('id', editandoId);
@@ -88,6 +95,7 @@ const GestionarCategoria: React.FC = () => {
           .insert([{ 
             nombre: nombre.trim(), 
             imagen_url: finalImgUrl,
+            imagen_portada: finalPortadaUrl,
             slug: slugCalculado 
           }]);
         if (error) throw error;
@@ -95,7 +103,9 @@ const GestionarCategoria: React.FC = () => {
 
       presentToast({ message: 'Categoría guardada con éxito', duration: 2000, color: 'success' });
       setNombre('');
+      setSlugGuardado('');
       setImagenUrl('');
+      setPortadaUrl('');
       cargarCategorias();
     } catch (err: any) {
       presentToast({ message: 'Error: ' + err.message, duration: 4000, color: 'danger' });
@@ -107,7 +117,9 @@ const GestionarCategoria: React.FC = () => {
   const prepararEdicion = (cat: any) => {
     setEditandoId(cat.id);
     setNombre(cat.nombre);
+    setSlugGuardado(cat.slug || '');
     setImagenUrl(cat.imagen_url || '');
+    setPortadaUrl(cat.imagen_portada || '');
     const content = document.querySelector('ion-content');
     if (content) content.scrollToTop(500);
   };
@@ -138,8 +150,9 @@ const GestionarCategoria: React.FC = () => {
     <IonPage>
       <IonHeader className="ion-no-border">
         <IonToolbar>
-          <IonButtons slot="start"><IonBackButton defaultHref="/home" color="primary" /></IonButtons>
+          <IonButtons slot="start"><IonMenuButton menu="main-menu" /><IonBackButton defaultHref="/home" color="primary" /></IonButtons>
           <IonTitle style={{ fontWeight: 'bold' }}>GESTIONAR CATEGORÍAS</IonTitle>
+          <IonButtons slot="end"><ThemeToggle /></IonButtons>
         </IonToolbar>
       </IonHeader>
 
@@ -151,7 +164,7 @@ const GestionarCategoria: React.FC = () => {
               <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h2 className="title" style={{ margin: 0 }}>{editandoId ? 'Editar Categoría' : 'Nueva Categoría'}</h2>
                 {editandoId && (
-                  <IonButton fill="clear" color="danger" onClick={() => {setEditandoId(null); setNombre(''); setImagenUrl('');}}>
+                  <IonButton fill="clear" color="danger" onClick={() => {setEditandoId(null); setSlugGuardado(''); setNombre(''); setImagenUrl(''); setPortadaUrl('');}}>
                     <IonIcon icon={closeOutline} slot="icon-only" />
                   </IonButton>
                 )}
@@ -169,17 +182,28 @@ const GestionarCategoria: React.FC = () => {
 
               {/* Muestra una vista previa del Slug mientras escribes */}
               <div style={{ padding: '0 10px', marginTop: '-5px', marginBottom: '10px' }}>
-                <small style={{ color: '#666' }}>URL amigable: <strong>{generarSlug(nombre) || '...'}</strong></small>
+                <small style={{ color: '#666' }}>URL amigable: <strong>{slugImagen || '...'}</strong></small>
               </div>
 
               <ImagenCampo
-                label="URL Imagen"
+                label="URL Logo (Opcional)"
                 value={imagenUrl}
                 onChange={setImagenUrl}
-                carpeta="Categoria_Imagenes"
-                slugBase={generarSlug(nombre)}
+                carpeta="Logo_Categorias"
+                slugBase={slugImagen}
                 previewFit="cover"
-                tituloPreview="Vista previa de imagen"
+                tituloPreview="Vista previa del logo"
+              />
+
+              <h3 style={{ marginTop: '20px', marginBottom: '10px', fontWeight: 600 }}>Portada de la categoría</h3>
+              <ImagenCampo
+                label="URL Portada revista (Opcional)"
+                value={portadaUrl}
+                onChange={setPortadaUrl}
+                carpeta="Portada_Categorias"
+                slugBase={slugImagen}
+                previewFit="cover"
+                tituloPreview="Vista previa de la portada"
               />
 
               <IonButton expand="block" className="main-btn ion-margin-top" onClick={confirmarGuardar} mode="ios">
@@ -210,6 +234,15 @@ const GestionarCategoria: React.FC = () => {
                         src={cat.imagen_url || placeholderImg} 
                         alt={cat.nombre} 
                         style={{ borderRadius: '8px' }}
+                        onError={(e: any) => { if (!e.target.src.startsWith('data:')) e.target.src = placeholderImg; }}
+                      />
+                    </IonThumbnail>
+
+                    <IonThumbnail slot="start" title={cat.imagen_portada ? 'Con portada' : 'Sin portada'}>
+                      <img
+                        src={cat.imagen_portada || placeholderImg}
+                        alt={`Portada ${cat.nombre}`}
+                        style={{ borderRadius: '8px', objectFit: 'cover', background: '#f4f4f4' }}
                         onError={(e: any) => { if (!e.target.src.startsWith('data:')) e.target.src = placeholderImg; }}
                       />
                     </IonThumbnail>

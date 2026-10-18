@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonInput, 
-  IonButton, IonList, IonLabel, IonIcon, IonButtons, IonBackButton, 
+  IonButton, IonList, IonLabel, IonIcon, IonButtons, IonBackButton, IonMenuButton,
   useIonToast, IonCard, IonCardContent, IonSkeletonText, useIonAlert, IonThumbnail
 } from '@ionic/react';
 import { 
@@ -11,10 +11,12 @@ import {
 import { supabase } from '../supabaseClient';
 import ImagenCampo from '../components/ImagenCampo';
 import { PLACEHOLDER_IMG } from '../components/placeholder';
+import ThemeToggle from '../components/ThemeToggle';
 import './GestionMarcas.css';
 
 const GestionMarcas: React.FC = () => {
   const [nombre, setNombre] = useState('');
+  const [slugGuardado, setSlugGuardado] = useState('');
   const [logoUrl, setLogoUrl] = useState('');
   const [portadaUrl, setPortadaUrl] = useState('');
   const [marcas, setMarcas] = useState<any[]>([]);
@@ -47,6 +49,8 @@ const GestionMarcas: React.FC = () => {
       .replace(/^-+|-+$/g, '');   
   };
 
+  const slugImagen = editandoId ? slugGuardado : generarSlug(nombre);
+
   const confirmarGuardar = () => {
     if (!nombre.trim()) {
       presentToast({ message: 'El nombre es obligatorio', duration: 2000, color: 'warning' });
@@ -68,7 +72,7 @@ const GestionMarcas: React.FC = () => {
   const ejecutarGuardado = async () => {
     const finalLogoUrl = logoUrl.trim() === '' ? null : logoUrl.trim();
     const finalPortadaUrl = portadaUrl.trim() === '' ? null : portadaUrl.trim();
-    const slugCalculado = generarSlug(nombre);
+    const slugCalculado = slugImagen;
 
     try {
       if (editandoId) {
@@ -100,6 +104,7 @@ const GestionMarcas: React.FC = () => {
       }
 
       setNombre('');
+      setSlugGuardado('');
       setLogoUrl('');
       setPortadaUrl('');
       cargarMarcas();
@@ -111,6 +116,7 @@ const GestionMarcas: React.FC = () => {
   const prepararEdicion = (marca: any) => {
     setEditandoId(marca.id);
     setNombre(marca.nombre);
+    setSlugGuardado(marca.slug || '');
     setLogoUrl(marca.logo_url || '');
     setPortadaUrl(marca.imagen_portada || '');
     const content = document.querySelector('ion-content');
@@ -147,8 +153,9 @@ const GestionMarcas: React.FC = () => {
     <IonPage>
       <IonHeader className="ion-no-border">
         <IonToolbar>
-          <IonButtons slot="start"><IonBackButton defaultHref="/home" color="primary" /></IonButtons>
+          <IonButtons slot="start"><IonMenuButton menu="main-menu" /><IonBackButton defaultHref="/home" color="primary" /></IonButtons>
           <IonTitle style={{fontWeight: 'bold'}}>GESTIÓN DE MARCAS</IonTitle>
+          <IonButtons slot="end"><ThemeToggle /></IonButtons>
         </IonToolbar>
       </IonHeader>
 
@@ -160,7 +167,7 @@ const GestionMarcas: React.FC = () => {
                 {editandoId ? 'Editar Marca' : 'Agregar Nueva Marca'}
               </h2>
               {editandoId && (
-                <IonButton fill="clear" color="danger" onClick={() => {setEditandoId(null); setNombre(''); setLogoUrl(''); setPortadaUrl('');}}>
+                <IonButton fill="clear" color="danger" onClick={() => {setEditandoId(null); setSlugGuardado(''); setNombre(''); setLogoUrl(''); setPortadaUrl('');}}>
                   <IonIcon icon={closeOutline} slot="icon-only" />
                 </IonButton>
               )}
@@ -178,7 +185,7 @@ const GestionMarcas: React.FC = () => {
 
             {/* Vista previa del Slug */}
             <div style={{ padding: '0 10px', marginTop: '-10px', marginBottom: '15px' }}>
-                <small style={{ color: '#666' }}>Slug de filtro: <strong>{generarSlug(nombre) || '...'}</strong></small>
+                <small style={{ color: '#666' }}>Slug de filtro: <strong>{slugImagen || '...'}</strong></small>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '5px' }}>
@@ -188,7 +195,7 @@ const GestionMarcas: React.FC = () => {
                   value={logoUrl}
                   onChange={setLogoUrl}
                   carpeta="Logo_Marcas"
-                  slugBase={generarSlug(nombre)}
+                  slugBase={slugImagen}
                   previewFit="contain"
                   tituloPreview="Vista previa del logo"
                 />
@@ -199,7 +206,7 @@ const GestionMarcas: React.FC = () => {
                   value={portadaUrl}
                   onChange={setPortadaUrl}
                   carpeta="Portada_Marcas"
-                  slugBase={generarSlug(nombre)}
+                  slugBase={slugImagen}
                   previewFit="cover"
                   tituloPreview="Vista previa de la portada"
                 />

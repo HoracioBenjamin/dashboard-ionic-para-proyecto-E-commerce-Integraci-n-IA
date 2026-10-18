@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { 
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent, 
-  IonList, IonLabel, IonButton, IonIcon, IonButtons, IonBackButton, 
+  IonList, IonLabel, IonButton, IonIcon, IonButtons, IonBackButton, IonMenuButton,
   IonGrid, IonRow, IonCol, IonBadge, useIonAlert, useIonToast, 
   IonSpinner, IonRefresher, IonRefresherContent, IonModal, 
   IonItem, IonInput, IonToggle, useIonLoading
@@ -13,6 +13,7 @@ import {
 } from 'ionicons/icons';
 import { supabase } from '../supabaseClient';
 import { PLACEHOLDER_IMG } from '../components/placeholder';
+import ThemeToggle from '../components/ThemeToggle';
 import './GestionarStock.css';
 
 const GestionarStock: React.FC = () => {
@@ -150,8 +151,9 @@ const GestionarStock: React.FC = () => {
     <IonPage>
       <IonHeader className="ion-no-border">
         <IonToolbar>
-          <IonButtons slot="start"><IonBackButton defaultHref="/home" color="primary" /></IonButtons>
+          <IonButtons slot="start"><IonMenuButton menu="main-menu" /><IonBackButton defaultHref="/home" color="primary" /></IonButtons>
           <IonTitle style={{ fontWeight: 'bold' }}>CONTROL DE STOCK</IonTitle>
+          <IonButtons slot="end"><ThemeToggle /></IonButtons>
         </IonToolbar>
       </IonHeader>
 

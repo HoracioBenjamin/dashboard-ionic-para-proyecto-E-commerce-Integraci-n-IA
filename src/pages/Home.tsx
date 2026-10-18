@@ -10,6 +10,8 @@ import {
   IonGrid, 
   IonRow, 
   IonCol, 
+  IonButtons,
+  IonMenuButton,
   useIonLoading 
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
@@ -26,6 +28,7 @@ import {
   cubeOutline
 } from 'ionicons/icons';
 import { supabase } from '../supabaseClient';
+import ThemeToggle from '../components/ThemeToggle';
 import './Home.css';
 
 const Home: React.FC = () => {
@@ -67,17 +70,21 @@ const Home: React.FC = () => {
       {/* Header elegante y minimalista */}
       <IonHeader className="ion-no-border dashboard-header">
         <IonToolbar>
+          <IonButtons slot="start">
+            <IonMenuButton menu="main-menu" />
+          </IonButtons>
+          <img
+            src="/logo-shoesduoc.svg"
+            alt="ShoesDuoc"
+            slot="start"
+            className="dashboard-header-logo"
+          />
           <IonTitle>WearShop HQ</IonTitle>
+          <IonButtons slot="end"><ThemeToggle /></IonButtons>
         </IonToolbar>
       </IonHeader>
 
       <IonContent className="dashboard-content ion-padding">
-        
-        {/* LOGO de la APP abajo del Header */}
-        <div className="dashboard-logo-container">
-          <img src="/logo-shoesduoc-navy.svg" alt="ShoesDuoc — WearShop" className="dashboard-logo" />
-        </div>
-
         {/* Grilla de Botones Estilo Apple */}
         <IonGrid className="dashboard-grid">
           <IonRow>

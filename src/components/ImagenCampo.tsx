@@ -10,6 +10,33 @@ import { PLACEHOLDER_IMG } from './placeholder';
 const BUCKET = 'imagenes';
 const MAX_BYTES = 2 * 1024 * 1024; // 2 MB
 const EXT_PERMITIDAS = ['jpg', 'jpeg', 'png', 'webp'];
+const CARPETAS_CATALOGO = ['Logo_Categorias', 'Logo_Marcas', 'Portada_Categorias', 'Portada_Marcas'];
+
+const convertirImagen = async (archivo: File, extension: string): Promise<Blob> => {
+  const bitmap = await createImageBitmap(archivo);
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = bitmap.width;
+    canvas.height = bitmap.height;
+    const contexto = canvas.getContext('2d');
+    if (!contexto) throw new Error('No se pudo procesar la imagen');
+    const tipo = extension === 'jpg' || extension === 'jpeg' ? 'image/jpeg' : `image/${extension}`;
+    if (tipo === 'image/jpeg') {
+      contexto.fillStyle = '#fff';
+      contexto.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    contexto.drawImage(bitmap, 0, 0);
+    return await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(blob => {
+        if (!blob || blob.type !== tipo) reject(new Error('No se pudo convertir la imagen'));
+        else if (blob.size > MAX_BYTES) reject(new Error('La imagen procesada supera los 2 MB'));
+        else resolve(blob);
+      }, tipo, 0.9);
+    });
+  } finally {
+    bitmap.close();
+  }
+};
 
 interface Props {
   label: string;
@@ -90,7 +117,7 @@ const ImagenCampo: React.FC<Props> = ({
       return;
     }
     if (!slugBase.trim()) {
-      presentToast({ message: 'Escribe el nombre primero para generar el archivo', duration: 2500, color: 'warning' });
+      presentToast({ message: 'Se necesita un slug para subir la imagen. Guarda el registro con su slug primero.', duration: 3000, color: 'warning' });
       return;
     }
     const ext = (archivo.name.split('.').pop() || '').toLowerCase();
@@ -100,19 +127,54 @@ const ImagenCampo: React.FC<Props> = ({
     }
     setSubiendo(true);
     try {
-      const ruta = `${carpeta}/${slugBase.trim()}.${ext}`;
-      const { error: upError } = await supabase.storage
+      const slug = slugBase.trim();
+      if (slug.includes('/') || slug.includes('\\') || slug === '.' || slug === '..') {
+        throw new Error('El slug no es válido como nombre de archivo');
+      }
+      let extensionDestino = ext;
+      let contenido: Blob = archivo;
+      if (CARPETAS_CATALOGO.includes(carpeta)) {
+        // Mantener la misma ruta aunque la nueva foto tenga otra extensión.
+        const { data: base } = supabase.storage.from(BUCKET).getPublicUrl(`${carpeta}/${slug}`);
+        const rutaActual = value.split(/[?#]/)[0];
+        const extensionActual = EXT_PERMITIDAS.find(extension => rutaActual === `${base.publicUrl}.${extension}`);
+        if (extensionActual) {
+          extensionDestino = extensionActual;
+        } else {
+          // Consultar archivos es opcional: algunas políticas permiten subir pero no listar.
+          const { data: existentes, error: listError } = await supabase.storage
+            .from(BUCKET).list(carpeta, { search: `${slug}.`, limit: 100 });
+          if (!listError) {
+            const anterior = existentes?.find(item =>
+              EXT_PERMITIDAS.some(extension => item.name === `${slug}.${extension}`));
+            extensionDestino = anterior?.name.split('.').pop() || ext;
+          }
+        }
+        if (extensionDestino !== ext) contenido = await convertirImagen(archivo, extensionDestino);
+      }
+      const ruta = `${carpeta}/${slug}.${extensionDestino}`;
+      const { data: subida, error: upError } = await supabase.storage
         .from(BUCKET)
-        .upload(ruta, archivo, { upsert: true, contentType: archivo.type });
+        .upload(ruta, contenido, { upsert: true, contentType: contenido.type, cacheControl: '0' });
       if (upError) throw upError;
+      if (!subida?.path) throw new Error('Supabase no confirmó la ruta del archivo subido');
       const { data } = supabase.storage.from(BUCKET).getPublicUrl(ruta);
-      onChange(data.publicUrl);
+      onChange(CARPETAS_CATALOGO.includes(carpeta) ? `${data.publicUrl}?v=${Date.now()}` : data.publicUrl);
       setArchivo(null);
       setPreviewLocal('');
       if (fileRef.current) fileRef.current.value = '';
-      presentToast({ message: 'Imagen subida con éxito', duration: 2000, color: 'success' });
+      presentToast({
+        message: `Imagen subida a ${BUCKET}/${subida.path}. Guarda los cambios para asociarla al registro.`,
+        duration: 10000,
+        color: 'success',
+        buttons: [{ text: 'Cerrar', role: 'cancel' }],
+      });
     } catch (err: any) {
-      presentToast({ message: 'Error al subir: ' + err.message, duration: 4000, color: 'danger' });
+      const mensaje = err?.message || 'No se pudo conectar con Supabase';
+      const detalle = /row.level security|permission|unauthorized/i.test(mensaje)
+        ? `Supabase rechazó la subida por permisos del bucket ${BUCKET}: ${mensaje}`
+        : `Error al subir a ${BUCKET}/${carpeta}: ${mensaje}`;
+      presentToast({ message: detalle, duration: 10000, color: 'danger', buttons: [{ text: 'Cerrar', role: 'cancel' }] });
     } finally {
       setSubiendo(false);
     }

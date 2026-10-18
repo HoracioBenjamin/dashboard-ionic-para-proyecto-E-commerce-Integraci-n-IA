@@ -1,0 +1,113 @@
+/* Panel lateral de administración — estilo institucional navy */
+
+.admin-menu {
+  --width: 264px;
+}
+
+.admin-menu-toolbar {
+  --background: #002855;
+  --color: #fff;
+  --min-height: 72px;
+  border-bottom: 2px solid #ffb800;
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+}
+
+.admin-menu-logo {
+  height: 30px;
+  width: auto;
+  margin-right: 10px;
+}
+
+.admin-menu-brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.admin-menu-brand strong {
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.admin-menu-brand span {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.08em;
+}
+
+.admin-menu-content {
+  --background: linear-gradient(180deg, #002855 0%, #001a38 100%);
+}
+
+.admin-menu-section {
+  background: transparent;
+  padding: 4px 10px 10px;
+}
+
+.admin-menu-section-title {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding-left: 12px;
+  min-height: 0;
+  margin: 10px 0 4px;
+}
+
+.admin-menu-item {
+  --background: transparent;
+  --color: rgba(255, 255, 255, 0.85);
+  --border-radius: 12px;
+  --padding-start: 12px;
+  --min-height: 44px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin: 1px 0;
+}
+
+.admin-menu-item ion-icon {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.15rem;
+  margin-right: 12px;
+}
+
+.admin-menu-item.active {
+  --background: rgba(255, 184, 0, 0.16);
+  --color: #ffb800;
+  font-weight: 700;
+}
+
+.admin-menu-item.active ion-icon {
+  color: #ffb800;
+}
+
+.admin-menu-item:not(.active):hover {
+  --background: rgba(255, 255, 255, 0.07);
+}
+
+.admin-menu-item[disabled] {
+  opacity: 0.55;
+}
+
+.admin-menu-soon {
+  --background: transparent;
+  --color: #ffb800;
+  border: 1px solid rgba(255, 184, 0, 0.5);
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Modo oscuro: sidebar aún más profundo */
+.ion-palette-dark .admin-menu-content {
+  --background: linear-gradient(180deg, #0b1526 0%, #060d1a 100%);
+}
+
+.ion-palette-dark .admin-menu-toolbar {
+  --background: #0b1526;
+}

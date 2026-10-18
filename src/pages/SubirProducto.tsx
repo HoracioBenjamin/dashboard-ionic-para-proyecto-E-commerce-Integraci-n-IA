@@ -2,13 +2,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
   IonItem, IonInput, IonButton, IonSelect, IonSelectOption,
-  IonToggle, IonBackButton, IonButtons, useIonToast, useIonLoading, IonIcon, IonLabel,
+  IonToggle, IonBackButton, IonButtons, IonMenuButton, useIonToast, useIonLoading, IonIcon, IonLabel,
   IonModal, IonSearchbar, IonList
 } from '@ionic/react';
 import { useLocation, useHistory } from 'react-router-dom';
 import { cloudUploadOutline, imageOutline, saveOutline, addOutline, trashOutline } from 'ionicons/icons';
 import { supabase } from '../supabaseClient';
 import ImagenCampo from '../components/ImagenCampo';
+import ThemeToggle from '../components/ThemeToggle';
 import { HexColorPicker } from "react-colorful";
 import './SubirProducto.css';
 import { useIonViewDidEnter } from '@ionic/react';
@@ -187,8 +188,9 @@ const SubirProducto: React.FC = () => {
     <IonPage>
       <IonHeader className="ion-no-border">
         <IonToolbar>
-          <IonButtons slot="start"><IonBackButton defaultHref="/gestionar-stock" color="blue" /></IonButtons>
+          <IonButtons slot="start"><IonMenuButton menu="main-menu" /><IonBackButton defaultHref="/gestionar-stock" color="blue" /></IonButtons>
           <IonTitle style={{ fontWeight: 'bold' }}>{editandoId ? 'EDITAR' : 'NUEVO'} PRODUCTO</IonTitle>
+          <IonButtons slot="end"><ThemeToggle /></IonButtons>
         </IonToolbar>
       </IonHeader>
 
