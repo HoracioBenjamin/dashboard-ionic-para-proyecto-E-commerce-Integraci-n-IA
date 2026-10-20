@@ -37,6 +37,7 @@ const GestionarStock: React.FC = () => {
           *,
           marcas ( nombre ),
           categorias ( nombre ),
+          generos ( nombre ),
           detalle_tallas:stock (
             id,
             talla,
@@ -202,7 +203,7 @@ const GestionarStock: React.FC = () => {
                               </span>
                             )}
                           </div>
-                          <p className="prod-brand">{prod.marcas?.nombre} • {prod.categorias?.nombre}</p>
+                          <p className="prod-brand">{prod.marcas?.nombre} • {prod.categorias?.nombre} • {prod.generos?.nombre}</p>
                           
                           {/* DETALLE DE TALLAS EN LA TARJETA */}
                           <div className="sizes-detail-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '8px' }}>

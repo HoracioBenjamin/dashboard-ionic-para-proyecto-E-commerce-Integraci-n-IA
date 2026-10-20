@@ -17,6 +17,7 @@ import './GestionarProductos.css';
 const GestionarProductos: React.FC = () => {
   const [productos, setProductos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filtroGenero, setFiltroGenero] = useState<string>('todos');
   const history = useHistory();
 
   const [presentAlert] = useIonAlert();
@@ -30,7 +31,8 @@ const GestionarProductos: React.FC = () => {
         .select(`
           *,
           marcas ( nombre ),
-          categorias ( nombre )
+          categorias ( nombre ),
+          generos ( nombre, slug )
         `)
         .order('created_at', { ascending: false });
 
@@ -87,6 +89,10 @@ const GestionarProductos: React.FC = () => {
     event.detail.complete();
   };
 
+  const productosFiltrados = filtroGenero === 'todos'
+    ? productos
+    : productos.filter(p => p.generos?.slug === filtroGenero);
+
   return (
     <IonPage>
       <IonHeader className="ion-no-border">
@@ -105,8 +111,17 @@ const GestionarProductos: React.FC = () => {
             <IonSpinner name="crescent" color="primary" /><p>Cargando productos...</p>
           </div>
         ) : (
-          <IonList className="transparent-list">
-            {productos.map((prod) => (
+          <>
+            {/* Filtro por género */}
+            <div className="filter-row">
+              <button className={`filter-chip ${filtroGenero === 'todos' ? 'active' : ''}`} onClick={() => setFiltroGenero('todos')}>Todos</button>
+              <button className={`filter-chip ${filtroGenero === 'hombre' ? 'active' : ''}`} onClick={() => setFiltroGenero('hombre')}>Hombre</button>
+              <button className={`filter-chip ${filtroGenero === 'mujer' ? 'active' : ''}`} onClick={() => setFiltroGenero('mujer')}>Mujer</button>
+              <button className={`filter-chip ${filtroGenero === 'unisex' ? 'active' : ''}`} onClick={() => setFiltroGenero('unisex')}>Unisex</button>
+            </div>
+
+            <IonList className="transparent-list">
+              {productosFiltrados.map((prod) => (
               <div key={prod.id} className="stock-card animate__animated animate__fadeIn">
                 <IonGrid>
                   <IonRow className="ion-align-items-center">
@@ -142,14 +157,15 @@ const GestionarProductos: React.FC = () => {
                             </span>
                           )}
                         </div>
-                        <p className="prod-brand">{prod.marcas?.nombre} • {prod.categorias?.nombre}</p>
+                        <p className="prod-brand">{prod.marcas?.nombre} • {prod.categorias?.nombre} • {prod.generos?.nombre}</p>
                       </IonLabel>
                     </IonCol>
                   </IonRow>
                 </IonGrid>
               </div>
             ))}
-          </IonList>
+            </IonList>
+          </>
         )}
 
         <IonFab vertical="bottom" horizontal="end" slot="fixed">

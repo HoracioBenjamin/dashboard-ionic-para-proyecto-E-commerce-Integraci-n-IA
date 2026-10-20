@@ -46,7 +46,7 @@ const SECTIONS: MenuSection[] = [
     entries: [
       { label: 'Panel principal', icon: gridOutline, path: '/home' },
       { label: 'Control de stock', icon: shirtOutline, path: '/gestionar-stock' },
-      { label: 'Ventas / Pedidos', icon: receiptOutline, soon: true },
+      { label: 'Ventas / Pedidos', icon: receiptOutline, path: '/ventas' },
       { label: 'Clientes', icon: personOutline, soon: true },
     ],
   },
@@ -84,7 +84,6 @@ const AdminMenu: React.FC = () => {
         <IonToolbar className="admin-menu-toolbar">
           <img src="/logo-shoesduoc.svg" alt="ShoesDuoc" className="admin-menu-logo" />
           <div className="admin-menu-brand">
-            <strong>WearShop HQ</strong>
             <span>Panel administración</span>
           </div>
         </IonToolbar>

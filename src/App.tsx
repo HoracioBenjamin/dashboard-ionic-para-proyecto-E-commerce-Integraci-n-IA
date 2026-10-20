@@ -9,6 +9,7 @@ import GestionMarcas from './pages/GestionMarcas';
 import GestionarCategoria from './pages/GestionarCategoria';
 import GestionarStock from './pages/GestionarStock';
 import GestionarProductos from './pages/GestionarProductos';
+import GestionarVentas from './pages/GestionarVentas';
 import { AiAssistant } from './components/IA';
 import AdminMenu from './components/AdminMenu';
 
@@ -69,6 +70,8 @@ const AppRoutes: React.FC = () => (
     <Route exact path="/gestionar-stock" component={GestionarStock} />
 
     <Route exact path="/gestionar-productos" component={GestionarProductos} />
+
+    <Route exact path="/ventas" component={GestionarVentas} />
 
     <Route exact path="/">
       <Redirect to="/splash" />

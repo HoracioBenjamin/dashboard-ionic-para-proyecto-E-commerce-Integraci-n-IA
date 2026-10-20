@@ -61,3 +61,34 @@
 .transparent-list {
   background: transparent;
 }
+
+/* ---- Filtro por género ---- */
+.filter-row {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0 14px;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  border: none;
+  background: #e5e5ea;
+  color: #002855;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  letter-spacing: 0.02em;
+}
+
+.filter-chip:active {
+  transform: scale(0.95);
+}
+
+.filter-chip.active {
+  background: #002855;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 40, 85, 0.25);
+}

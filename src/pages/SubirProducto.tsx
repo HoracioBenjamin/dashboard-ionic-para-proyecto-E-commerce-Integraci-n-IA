@@ -28,6 +28,7 @@ const SubirProducto: React.FC = () => {
   const [descripcion, setDescripcion] = useState('');
   const [imagenUrl, setImagenUrl] = useState('');
   const [categoriaId, setCategoriaId] = useState<number | null>(null);
+  const [generoId, setGeneroId] = useState<number | null>(null);
   const [colorId, setColorId] = useState<number | null>(null);
   const [colorHex, setColorHex] = useState<string>('#ffffff');
   const [filtroColor, setFiltroColor] = useState<string>('');
@@ -35,6 +36,7 @@ const SubirProducto: React.FC = () => {
 
   const [listaMarcas, setListaMarcas] = useState<any[]>([]);
   const [listaCategorias, setListaCategorias] = useState<any[]>([]);
+  const [listaGeneros, setListaGeneros] = useState<any[]>([]);
   const [listaColores, setListaColores] = useState<any[]>([]);
   const [variantes, setVariantes] = useState<{ talla: string, cantidad: number }[]>([]);
 
@@ -56,9 +58,11 @@ const SubirProducto: React.FC = () => {
       const { data: m } = await supabase.from('marcas').select('*').order('nombre');
       const { data: c } = await supabase.from('categorias').select('*').order('nombre');
       const { data: col } = await supabase.from('colores').select('*').order('nombre');
+      const { data: g } = await supabase.from('generos').select('*').order('id');
       setListaMarcas(m || []);
       setListaCategorias(c || []);
       setListaColores(col || []);
+      setListaGeneros(g || []);
     };
     cargarDatosBase();
   }, []);
@@ -89,6 +93,7 @@ const SubirProducto: React.FC = () => {
       setMarcaId(p.marca_id);
       setCategoriaId(p.categoria_id);
       setColorId(p.color_id || null);
+      setGeneroId(p.genero_id || null);
 
       // Cargar tallas específicamente para este producto
       const cargarTallas = async () => {
@@ -116,6 +121,7 @@ const SubirProducto: React.FC = () => {
     setMarcaId(null);
     setCategoriaId(null);
     setColorId(null);
+    setGeneroId(null);
     setColorHex('#ffffff');
     setVariantes([]);
   };
@@ -141,7 +147,7 @@ const SubirProducto: React.FC = () => {
 
     try {
       const datosProducto = {
-        nombre, marca_id: marcaId, categoria_id: categoriaId, color_id: colorId,
+        nombre, marca_id: marcaId, categoria_id: categoriaId, color_id: colorId, genero_id: generoId,
         precio, precio_oferta: enOferta ? precioOferta : null,
         en_oferta: enOferta, descripcion, imagen_url: imagenUrl
       };
@@ -216,6 +222,20 @@ const SubirProducto: React.FC = () => {
             </IonSelect>
             <IonSelect label="Categoría" labelPlacement="floating" fill="outline" value={categoriaId} onIonChange={e => setCategoriaId(e.detail.value)} style={{ flex: 1 }}>
               {listaCategorias?.map(c => <IonSelectOption key={c.id} value={c.id}>{c.nombre}</IonSelectOption>)}
+            </IonSelect>
+          </div>
+
+          <div style={{ display: 'flex', gap: '10px', padding: '0 5px', marginTop: '15px' }}>
+            <IonSelect
+              label="Género"
+              labelPlacement="floating"
+              fill="outline"
+              value={generoId}
+              onIonChange={e => setGeneroId(e.detail.value)}
+              style={{ flex: 1 }}
+            >
+              <IonSelectOption value={null}>Sin especificar</IonSelectOption>
+              {listaGeneros?.map(g => <IonSelectOption key={g.id} value={g.id}>{g.nombre}</IonSelectOption>)}
             </IonSelect>
           </div>
 

@@ -58,7 +58,7 @@ const Home: React.FC = () => {
     { name: 'Gestionar Stock', icon: shirtOutline, path: '/gestionar-stock', active: true },
     { name: 'Crear/Gestionar Marcas', icon: pricetagOutline, path: '/gestionar-marcas', active: true },
     { name: 'Crear/Gestionar Categorias', icon: albumsOutline, path: '/gestionar-categorias', active: true },
-    { name: 'Ventas/Pedidos', icon: receiptOutline, path: '#', active: false },
+    { name: 'Ventas/Pedidos', icon: receiptOutline, path: '/ventas', active: true },
     { name: 'Clientes', icon: personOutline, path: '#', active: false },
     { name: 'Mensajes', icon: mailOutline, path: '#', active: false },
     { name: 'Ajustes', icon: settingsOutline, path: '#', active: false },
